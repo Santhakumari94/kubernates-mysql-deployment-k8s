@@ -1,33 +1,29 @@
-apiVersion: apps/v1 #we know that all the communication in k8s happen through api. 
-#what we want to create
-#inside kind you need to define type of api you want to execute. 
-kind: Deployment #pod#service
-metadata: #using metada and name we define the name of deployment
-  name: usermgmt-webapp #a deployment name myapp-deployment is created using .metadata.name field
+apiVersion: apps/v1  
+kind: Deployment 
+metadata:
+  name: usermgmt-webapp 
   labels:
     app: usermgmt-webapp
-spec: #inside your deployment we need to provide spec how this deployment api will launch your pod
-  replicas: 1 #it will create three pod
-  selector: #the .spec.selector file define ho the deployment find which pod to manage. 
-    matchLabels: #.spec.selector.matchlabel it is euqivalent to map ke,value. something called as match expression
-      app: usermgmt-webapp
-  
-  template: #container template deploy in three pod
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels:
+      app: usermgmt-webapp  
+  template:
     metadata:
-      name: usermgmt-webapp   #using metadata name
+      name: usermgmt-webapp  
       labels: 
-        app: usermgmt-webapp  #this label should match with pod label. 
-    spec: #we define container spec
-        
+        app: usermgmt-webapp  
+    spec:       
         containers:
           - name: usermgmt-webapp  
-            image: stacksimplify/kube-usermgmt-webapp:1.0.0-MySQLDB
+            image: santhakumari94/cloud-learning-app:v2
             ports:
               - containerPort: 8080
                 name: mysql 
             env:
               - name: DB_HOSTNAME
-                value: 192.168.145.208
+                value: 192.168.21.252
               - name: DB_PORT
                 value: "3306"
               - name: DB_NAME 
@@ -37,10 +33,6 @@ spec: #inside your deployment we need to provide spec how this deployment api wi
               - name: DB_PASSWORD
                 valueFrom:
                   secretKeyRef:
-                #this two value come from mysqlsecret.yml 
-                    name: my-db-secret #this is the name of the secret
-                    key: db-password #
-                  
-
-              #this volume mount is inside my container
-            
+                    name: my-db-secret
+                    key: db-password 
+          
